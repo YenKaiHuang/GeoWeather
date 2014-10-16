@@ -1,0 +1,1 @@
+../../GData/Source/Clients/Health/GDataQueryGoogleHealth.h
