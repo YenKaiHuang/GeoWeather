@@ -12,8 +12,13 @@
 @implementation GeoWeather{
     GDataXMLDocument *doc;
     GDataXMLElement *root;
-    
+
     AFHTTPRequestOperationManager *manager;
+    
+    float currentLat;
+    float currentLng;
+    
+    int cityIndex;
 }
 
 - (id) init{
@@ -21,11 +26,14 @@
     if (self) {
         manager = [AFHTTPRequestOperationManager manager];
         manager.responseSerializer = [[AFXMLParserResponseSerializer alloc] init];
+        self.city = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
 - (void) getAddrWithLat:(float)lat lng:(float)lng{
+    currentLat = lat;
+    currentLng = lng;
     NSString *addrUrl = [NSString stringWithFormat:GoogleGeoToCityURL, lat, lng];
     addrUrl = [addrUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -40,10 +48,21 @@
               for (GDataXMLElement *addr in addressArray) {
                   types = [addr elementsForName:@"type"];
                   GDataXMLElement *type = (GDataXMLElement *) [types objectAtIndex:0];
-                  if ([type.stringValue isEqualToString:@"administrative_area_level_3"]) {
+                  if ([type.stringValue isEqualToString:@"administrative_area_level_4"]) {
                       GDataXMLElement *cityElement = [[addr elementsForName:@"long_name"] objectAtIndex:0];
-                      self.city = cityElement.stringValue;
+                      [self.city setValue:cityElement.stringValue forKey:@"city4"];
+                  } else if ([type.stringValue isEqualToString:@"administrative_area_level_3"]) {
+                      GDataXMLElement *cityElement = [[addr elementsForName:@"long_name"] objectAtIndex:0];
+                      [self.city setValue:cityElement.stringValue forKey:@"city3"];
+                  }else if ([type.stringValue isEqualToString:@"administrative_area_level_2"]) {
+                      GDataXMLElement *cityElement = [[addr elementsForName:@"long_name"] objectAtIndex:0];
+                      [self.city setValue:cityElement.stringValue forKey:@"city2"];
+                  }else if ([type.stringValue isEqualToString:@"administrative_area_level_1"]) {
+                      GDataXMLElement *cityElement = [[addr elementsForName:@"long_name"] objectAtIndex:0];
+                      [self.city setValue:cityElement.stringValue forKey:@"city1"];
+                      cityIndex = 1;
                       [self.delegate geoWeatherDidGetCity:self city:self.city];
+                      
                       break;
                   }
               }
@@ -54,9 +73,12 @@
     
 }
 
-- (void) getYahooWoeidWithCity:(NSString *)city{
+- (void) getYahooWoeidWithCity:(NSDictionary *)city{
     
-    NSString *cityUrl = [NSString stringWithFormat:YahooGeoPlaceURL, city];
+    NSString *cityString = [city valueForKey:[NSString stringWithFormat:@"city%d", cityIndex]];
+//    NSLog(@"cityString = %@", cityString);
+    
+    NSString *cityUrl = [NSString stringWithFormat:YahooGeoPlaceURL, cityString];
     cityUrl = [cityUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSDictionary *parameters = @{};
@@ -69,14 +91,27 @@
               for (GDataXMLElement *result in resultsArray) {
                   GDataXMLElement *placeElement = [[result elementsForName:@"place"] objectAtIndex:0];
                   GDataXMLElement *woeidElement = [[placeElement elementsForName:@"woeid"] objectAtIndex:0];
-                  self.woeid = woeidElement.stringValue;
-                  [self.delegate geoWeatherDidGetWoeid:self woeid:self.woeid];
+                  GDataXMLElement *centroidElement = [[placeElement elementsForName:@"centroid"] objectAtIndex:0];
+                  GDataXMLElement *latElement = [[centroidElement elementsForName:@"latitude"] objectAtIndex:0];
+                  GDataXMLElement *lngElement = [[centroidElement elementsForName:@"longitude"] objectAtIndex:0];
+//                  NSLog(@"woeidElement = %@", woeidElement.stringValue);
+//                  NSLog(@"latElement = %@", latElement.stringValue);
+//                  NSLog(@"lngElement = %@", lngElement.stringValue);
+                  if ((int)([latElement.stringValue doubleValue] - currentLat) == 0 && (int)([lngElement.stringValue doubleValue] - currentLng) == 0) {
+                      self.woeid = woeidElement.stringValue;
+                  }
                   break;
+              }
+              cityIndex ++;
+              if (cityIndex < 5) {
+                  [self getYahooWoeidWithCity:self.city];
+              }else{
+                  [self.delegate geoWeatherDidGetWoeid:self woeid:self.woeid];
               }
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
               
-          }];    
+          }];
 }
 
 - (void) getYahooWeatherWithWoeid:(NSString *)woeid{

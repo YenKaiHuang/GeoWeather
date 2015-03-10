@@ -23,6 +23,7 @@
 }
 
 - (void) startUpdataLocation{
+    NSLog(@"startUpdataLocation");
     if (locationManager == nil){
         locationManager = [[CLLocationManager alloc] init];
     }
@@ -55,7 +56,8 @@
 
 #pragma mark - GeoWeather Delegate
 
-- (void)geoWeatherDidGetCity:(GeoWeather *)geoWeather city:(NSString *)city{
+- (void)geoWeatherDidGetCity:(GeoWeather *)geoWeather city:(NSMutableDictionary *)city{
+    NSLog(@"city = %@", city);
     [geoWeather getYahooWoeidWithCity:city];
 }
 

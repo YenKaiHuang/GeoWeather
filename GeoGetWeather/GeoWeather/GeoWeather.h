@@ -20,7 +20,7 @@
 
 
 @property (nonatomic, strong) id<GeoWeatherDelegate>delegate;
-@property (nonatomic, strong) NSString *city;
+@property (nonatomic, strong) NSMutableDictionary *city;
 @property (nonatomic, strong) NSString *woeid;
 
 
@@ -35,7 +35,7 @@
  * @brief get YahooWoeid With City
  * @param city (NSString *)city
  */
-- (void) getYahooWoeidWithCity:(NSString *)city;
+- (void) getYahooWoeidWithCity:(NSMutableDictionary *)city;
 
 /**
  * @brief get Yahoo Weather With Woeid
@@ -56,7 +56,7 @@
  * @param geoWeather (GeoWeather *)geoWeather object
  * @param city (NSString *)city
  */
-- (void) geoWeatherDidGetCity:(GeoWeather *)geoWeather city:(NSString *)city;
+- (void) geoWeatherDidGetCity:(GeoWeather *)geoWeather city:(NSMutableDictionary *)city;
 
 /**
  * @brief geoWeather get Woeid finished delegate

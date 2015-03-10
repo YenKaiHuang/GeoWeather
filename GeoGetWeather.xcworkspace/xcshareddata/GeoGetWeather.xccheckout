@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>18CF036E-A6BB-4CCE-BD31-4944C32A7FD9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GeoGetWeather</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>386843AED897B8368BD03192C5CBCAC5C1D46442</key>
+		<string>github.com:YenKaiHuang/GeoWeather.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>GeoGetWeather.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>386843AED897B8368BD03192C5CBCAC5C1D46442</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:YenKaiHuang/GeoWeather.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>386843AED897B8368BD03192C5CBCAC5C1D46442</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>386843AED897B8368BD03192C5CBCAC5C1D46442</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GeoWeather</string>
+		</dict>
+	</array>
+</dict>
+</plist>
